@@ -6,16 +6,16 @@ const Post = require('../models/postModel');
 
 exports.addComment = async(req,res) => {
     try{
-        const{post, user, body} = req.body;
+        const{post, user, body} = req.body; // extract from user req
 
         const comment = new Comment({
             post,user,body
-        })
+        }) // create a new schema of comment type from user request
 
-        const savedComment = await comment.save();
+        const savedComment = await comment.save(); // usong .save() to save in db
 
-        const updatedPost = await Post.findByIdAndUpdate(post, {$push : {comment: savedComment._id}}, {new:true} )
-                .populate("comment")
+        const updatedPost = await Post.findByIdAndUpdate(post, {$push : {comment: savedComment._id}}, {new:true} ) // update in post's comment array 
+                .populate("comment") //to complete show the comment 
                 .exec();
 
                 res.json({post : updatedPost})
