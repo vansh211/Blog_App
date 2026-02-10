@@ -26,3 +26,22 @@ exports.addComment = async(req,res) => {
         })
     }
 }
+
+exports.deleteComment = async(req, res) => {
+    try{
+        const {post, comment} = req.body;
+        const deleteCom = await Comment.findOneAndDelete({post:post, _id:comment});
+
+        const deletePostCom = await Post.findByIdAndUpdate(post, {$pull: {comment: comment._id}}, {new:true})
+
+        return res.json({
+            message : "Successfull",
+            post : deletePostCom
+        })
+    }
+    catch(err){
+        return res.json({
+            err : "Eroor while deleting"
+        })
+    }
+}
